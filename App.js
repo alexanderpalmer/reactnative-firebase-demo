@@ -1,47 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { FlatList, Button, TextInput, TouchableHighlight, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList, Button, TextInput, TouchableHighlight,
+  SafeAreaView, StyleSheet, Text, View
+} from 'react-native';
 
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD9izt88wpYu_gVf1w2BvC2xPaGap4RqP8",
-  authDomain: "reactnative-57c6b.firebaseapp.com",
-  databaseURL: "https://reactnative-57c6b.firebaseio.com",
-  projectId: "reactnative-57c6b",
-  storageBucket: "reactnative-57c6b.appspot.com",
-  messagingSenderId: "794768995053",
-  appId: "1:794768995053:web:1a64f1bce820ff2a3812e4",
-  measurementId: "G-34MRPD5K0C"
-};
-
-if (firebase.apps.length === 0) {
-  firebase.initializeApp(firebaseConfig);
-
-}
-const db = firebase.firestore();
-
-console.disableYellowBox = true;
-
+import DB, { db } from './Db';
+import ItemList from './ItemList';
 
 export default function App() {
   const ref = db.collection('rndemo');
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
 
-  const renderItem = ({ item }) => (
-    <TouchableHighlight
-      style={styles.item}
-      key={item.id}
-      underlayColor='#aee6e0'>
-      <View>
-        <Text selectionColor='white'>
-          {item.firstname} {item.lastname}
-        </Text>
-      </View>
-    </TouchableHighlight>
-  );
+  useEffect(() => {
+    console.disableYellowBox = true;
+  })
 
   useEffect(() => {
     return ref.onSnapshot(querySnapshot => {
@@ -64,13 +38,13 @@ export default function App() {
     });
   }, []);
 
+
+
   return (
-    <FlatList
-      style={{ flex: 1 }}
-      data={items}
-      keyExtractor={(item) => item.id}
-      renderItem={renderItem}
-    />
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Firebase Demo mit React Native</Text>
+      <ItemList items={items}></ItemList>
+    </SafeAreaView>
   );
 }
 
@@ -78,17 +52,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     justifyContent: 'center',
-  },
-  item: {
-    marginLeft: 5,
-    marginRight: 5,
-    padding: 15,
-    marginVertical: 0,
-    borderBottomColor: 'black',
 
-    borderStyle: 'solid',
-    borderBottomWidth: 0.3,
+  },
+  header: {
+    backgroundColor: 'red',
+    color: 'white',
+    fontSize: 18,
+    paddingTop: 25,
+    padding: 10,
   },
 });

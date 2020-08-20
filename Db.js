@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 
@@ -15,20 +14,9 @@ const firebaseConfig = {
 
 if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
+}
 
-}
-const db = firebase.firestore();
-let temp = [];
-export default function getDataFromDb() {
-    const ref = db.collection('rndemo');
-    db.collection('rndemo')
-        .get()
-        .then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-                console.log(doc.data());
-                temp.push(JSON.parse(doc.data()));
-            })
-        })
-    console.log(temp.length)
-    return temp;
-}
+const DB = () => { }
+
+export default DB;
+export const db = firebase.firestore();
